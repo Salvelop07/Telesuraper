@@ -1,0 +1,10 @@
+version: "3"
+
+services:
+  scrapy:
+    build:
+      context: .
+    environment:
+      SERVICE_ID: telesur
+      SCHEDULE_URL: https://www.telesurtv.net/seccion/programas/helper.html
+      SCHEDULE_TIMEZONE: America/Caracas
