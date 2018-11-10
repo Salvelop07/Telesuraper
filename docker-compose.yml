@@ -5,6 +5,7 @@ services:
     build:
       context: .
     environment:
-      SERVICE_ID: telesur
-      SCHEDULE_URL: https://www.telesurtv.net/seccion/programas/helper.html
-      SCHEDULE_TIMEZONE: America/Caracas
+      SERVICE_ID:
+      SCHEDULE_URL:
+      SCHEDULE_TIMEZONE:
+
