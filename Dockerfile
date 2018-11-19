@@ -1,7 +1,7 @@
 FROM scrapinghub/scrapinghub-stack-scrapy:1.3
 
 ENV TERM xterm
-ENV SCRAPY_SETTINGS_MODULE scraper.settings
+ENV SCRAPY_SETTINGS_MODULE telesurscraper.settings
 
 RUN mkdir -p /app
 WORKDIR /app

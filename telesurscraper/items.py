@@ -15,3 +15,13 @@ class BroadcastEventItem(scrapy.Item):
     timezone = scrapy.Field()
     weekday = scrapy.Field()
     serie = scrapy.Field()
+
+
+class ArticleItem(scrapy.Itme):
+    title = scrapy.Field()
+    date = scrapy.Field()
+    url = scrapy.Field()
+    body = scrapy.Field()
+    author = scrapy.Field()
+    section = scrapy.Field()
+    service = scrapy.Field()

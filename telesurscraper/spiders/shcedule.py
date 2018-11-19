@@ -5,16 +5,16 @@ import re
 import scrapy
 from scraper.items import BroadcastEventItem
 
-SERVICE_ID = os.environ.get('SERVICE_ID')
-SCHEDULE_URL = os.environ.get('SCHEDULE_URL')
-SCHEDULE_TIMEZONE = os.environ.get('SCHEDULE_TIMEZONE')
+SERVICE_ID = os.getenv('SERVICE_ID')
+SCHEDULE_URL = os.getenv('SCHEDULE_URL')
+SCHEDULE_TIMEZONE = os.getenv('SCHEDULE_TIMEZONE')
 
 WEEKDAYS = ('lunes', 'martes', 'miercoles', 'jueves', 'viernes', 'sabado', 'domingo')
 MONTHS = ('ENE', 'FEB', 'MAR', 'ABR', 'MAY', 'JUN', 'JUL', 'AGO', 'SEP', 'OCT', 'NOV', 'DIC')
 
 
 class BroadcastSchedule(scrapy.Spider):
-    name = 'broadcast-schedule'
+    name = 'schedule'
     start_urls = ['{}?tz=0&all=true&day={}'.format(SCHEDULE_URL, dia)
                   for dia in WEEKDAYS]
 
