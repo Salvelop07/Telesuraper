@@ -17,11 +17,13 @@ class BroadcastEventItem(scrapy.Item):
     serie = scrapy.Field()
 
 
-class ArticleItem(scrapy.Itme):
-    title = scrapy.Field()
-    date = scrapy.Field()
-    url = scrapy.Field()
-    body = scrapy.Field()
-    author = scrapy.Field()
-    section = scrapy.Field()
+class ArticleItem(scrapy.Item):
     service = scrapy.Field()
+    section = scrapy.Field()
+    author = scrapy.Field()
+    url = scrapy.Field()
+    datePublished = scrapy.Field()
+    headline = scrapy.Field()
+    description = scrapy.Field()
+    body = scrapy.Field()
+    thumbnail = scrapy.Field()

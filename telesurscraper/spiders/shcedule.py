@@ -1,22 +1,19 @@
 from datetime import time
-import os
-import re
+from scrapy.spiders import Spider, Request
 
-import scrapy
-from scraper.items import BroadcastEventItem
-
-SERVICE_ID = os.getenv('SERVICE_ID')
-SCHEDULE_URL = os.getenv('SCHEDULE_URL')
-SCHEDULE_TIMEZONE = os.getenv('SCHEDULE_TIMEZONE')
+from telesurscraper.items import BroadcastEventItem
 
 WEEKDAYS = ('lunes', 'martes', 'miercoles', 'jueves', 'viernes', 'sabado', 'domingo')
 MONTHS = ('ENE', 'FEB', 'MAR', 'ABR', 'MAY', 'JUN', 'JUL', 'AGO', 'SEP', 'OCT', 'NOV', 'DIC')
 
 
-class BroadcastSchedule(scrapy.Spider):
+class BroadcastSchedule(Spider):
     name = 'schedule'
-    start_urls = ['{}?tz=0&all=true&day={}'.format(SCHEDULE_URL, dia)
-                  for dia in WEEKDAYS]
+
+    def start_requests(self):
+        for weekday in WEEKDAYS:
+            url = '{}?tz=0&all=true&day={}'.format(self.settings['SCHEDULE_URL'], weekday)
+            yield Request(url, self.parse)
 
     def parse(self, response):
         """ Parses teleSUR broadcast events schedule
@@ -29,8 +26,8 @@ class BroadcastSchedule(scrapy.Spider):
         for schedule in response.css('#grilla-web .scheduleback'):
             time_ranges = list(map(int, schedule.css('.sdate::text').re(r'(\d\d):(\d\d)')))
             yield BroadcastEventItem(
-                service=SERVICE_ID,
-                timezone=SCHEDULE_TIMEZONE,
+                service=self.settings['SERVICE_ID'],
+                timezone=self.settings['SCHEDULE_TIMEZONE'],
                 start=time(*time_ranges[:2]),
                 end=time(*time_ranges[2:]),
                 serie=schedule.css('.stitle a::text').extract_first(),

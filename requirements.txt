@@ -1,1 +1,6 @@
 guppy==0.1.10
+extruct
+graphqlclient
+python-dateutil
+htmlmin
+tomd
