@@ -1,5 +1,11 @@
 # teleSUR scraper
 
+## Running the spiders
+
+    $ scrapy crawl home
+    $ scrapy crawl schedule
+
+
 ## Extracted data
 
 ### Broadcast Events schedule
@@ -12,12 +18,3 @@
         "weekday": 2,
         "timezone": "America/Caracas"
     }
-
-## Spiders
-
-    $ scrapy list
-    broadcast-schedule
-
-## Running the spiders
-
-    $ scrapy crawl broadcast-schedule
