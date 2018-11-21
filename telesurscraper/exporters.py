@@ -45,13 +45,12 @@ class PrismaGraphQLExporter(BaseItemExporter):
                 return super().serialize_field(field, name, value)
 
         # This is a relation field, add or update related object if needed
-        seen_key = '%s:%s:%s' % (related_type, relation_field, vlue)
+        seen_key = '%s:%s:%s' % (related_type, relation_field, value)
 
-        related_obj = self.seen_relations.get(seen_key)
-        if not related_obj:
-            related_obj = self._exists(value, filter_field=relation_field,
-                                              query_field=lower_first(related_type))
-            self.seen_relations[related_obj] = related_obj
+        related_obj = self.seen_relations.get('seen_key') \
+                      or self._exists(value, filter_field=relation_field,
+                                             query_field=lower_first(related_type))
+        self.seen_relations[seen_key] = related_obj
 
         # Create new related object if needed
         if not related_obj:

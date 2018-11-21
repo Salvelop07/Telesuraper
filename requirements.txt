@@ -2,5 +2,4 @@ extruct
 graphqlclient
 python-dateutil
 htmlmin
-tomd
 jmespath

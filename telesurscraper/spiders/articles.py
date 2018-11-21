@@ -3,22 +3,26 @@ from html import unescape
 import logging
 
 from dateutil.parser import parse as parse_date
+import htmlmin
 from scrapy import Request
 from scrapy.spiders import Spider, CrawlSpider, Rule
 from scrapy.linkextractors import LinkExtractor
 from scrapy.loader.processors import TakeFirst, MapCompose, Join, Compose, Identity
-import htmlmin
 
-from telesurscraper.items import ArticleItem
 from telesurscraper.itemloaders import ExtructItemLoader
+from telesurscraper.items import ArticleItem
 
 
-class ArticlePageLoader(ExtructItemLoader):
+class ArticlePageItemLoader(ExtructItemLoader):
     default_input_processor = MapCompose(unescape)
     default_output_processor = TakeFirst()
+
     body_in = MapCompose(default_input_processor, htmlmin.minify)
+
     tags_out = Identity()
+
     author_in = MapCompose(str.strip)
+
     datePublished_in = MapCompose(parse_date, lambda date: date.isoformat())
 
 
@@ -27,7 +31,7 @@ class BaseArticlePageSpider(Spider):
     Example URL: https://www.telesurtv.net/news/muere-ali-rodriguez-araque-venezuela-cuba-20181119-0040.html"""
 
     def parse_article_page(self, response):
-        l = ArticlePageLoader(item=ArticleItem(), response=response)
+        l = ArticlePageItemLoader(item=ArticleItem(), response=response)
 
         # URL
         l.add_value('url', response.url)
@@ -69,8 +73,8 @@ class ArticleJspListingSpider(BaseArticlePageSpider):
 
     def start_requests(self):
         jsp_url = 'https://www.telesurtv.net/system/modules/com.tfsla.diario.telesur/elements/TS_NewsCategory_Page.jsp'
-        page_size = getattr(self, 'page_size', self.settings.get('JSPLISTING_PAGE_SIZE', 100))
-        max_pages = getattr(self, 'max_pages', self.settings.get('JSPLISTING_MAX_PAGES', 100))
+        page_size = getattr(self, 'page_size', self.settings.get('JSPLISTING_PAGE_SIZE', 10))
+        max_pages = getattr(self, 'max_pages', self.settings.get('JSPLISTING_MAX_PAGES', 10))
         page = getattr(self, 'page', 1)
         for i in range(max_pages):
             url = '{}?pagina={}&size={}'.format(jsp_url, i+page, page_size)

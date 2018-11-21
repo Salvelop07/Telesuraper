@@ -1,11 +1,10 @@
 # -*- coding: utf-8 -*-
-from dateutil.parser import parse
-from graphqlclient import GraphQLClient
-import logging
 import json
-from scrapy.exporters import PythonItemExporter
+import logging
+
+from graphqlclient import GraphQLClient
 from htmlmin import minify
-from tomd import Tomd
+from scrapy.exporters import PythonItemExporter
 
 from telesurscraper.exporters import PrismaGraphQLExporter
 
