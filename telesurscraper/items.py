@@ -20,5 +20,5 @@ class ArticleItem(Item):
     body = Field()
     tags = Field(array_type=True)
     images = Field(array_type=True)
-    section = Field(related_type='ArticleSection', relation_field='name')
+    sections = Field(array_type=True, related_type='ArticleSection', relation_field='name')
     service = Field(related_type='Service', relation_field='name')

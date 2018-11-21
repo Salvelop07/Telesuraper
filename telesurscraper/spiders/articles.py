@@ -23,6 +23,8 @@ class ArticlePageItemLoader(ExtructItemLoader):
 
     images_out = Identity()
 
+    sections_out = Identity()
+
     author_in = MapCompose(str.strip)
 
     datePublished_in = MapCompose(parse_date, lambda date: date.isoformat())
@@ -49,7 +51,7 @@ class BaseArticlePageSpider(Spider):
         l.add_jsonld('description', 'NewsArticle', '[].description')
 
         # Author
-        # l.add_css('author', '.tagBarNews a::attr(title)')
+        l.add_jsonld('author', 'NewsArticle', '[].author.name')
 
         # Images
         l.add_jsonld('images', 'NewsArticle', '[].image.url')
@@ -57,8 +59,8 @@ class BaseArticlePageSpider(Spider):
         # Body
         l.add_css('body', '.txt_newworld')
 
-        # Section
-        l.add_css('section', '.nworldtop .itacaput a:last-child::attr(title)')
+        # Sections
+        l.add_css('sections', '.nworldtop .itacaput a::attr(title)')
 
         # Tags
         l.add_css('tags', '.tagBarNews a::attr(title)')

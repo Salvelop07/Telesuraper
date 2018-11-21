@@ -36,7 +36,6 @@ class PrismaGraphQLExporter(BaseItemExporter):
         relation_field = field.get('relation_field')
         array_type = field.get('array_type')
 
-        print('called serialized field', name, value, related_type, relation_field)
         if not related_type:
             # This is a scalar field, return as is
             if array_type:
@@ -45,19 +44,37 @@ class PrismaGraphQLExporter(BaseItemExporter):
                 return super().serialize_field(field, name, value)
 
         # This is a relation field, add or update related object if needed
-        seen_key = '%s:%s:%s' % (related_type, relation_field, value)
+        # TODO: remove code duplication
+        if not array_type:
+            seen_key = '%s:%s:%s' % (related_type, relation_field, value)
 
-        related_obj = self.seen_relations.get('seen_key') \
-                      or self._exists(value, filter_field=relation_field,
-                                             query_field=lower_first(related_type))
-        self.seen_relations[seen_key] = related_obj
+            related_obj = self.seen_relations.get('seen_key') \
+                          or self._exists(value, filter_field=relation_field,
+                                                 query_field=lower_first(related_type))
+            self.seen_relations[seen_key] = related_obj
 
-        # Create new related object if needed
-        if not related_obj:
-            related_obj = self._execute_create(dict(**{relation_field: value}), related_type)
+            # Create new related object if needed
+            if not related_obj:
+                related_obj = self._execute_create(dict(**{relation_field: value}), related_type)
 
-        connection = {'connect': {'id': related_obj['id']}}
-        return super().serialize_field(field, name, connection)
+            connection = {'connect': {'id': related_obj['id']}}
+            return super().serialize_field(field, name, connection)
+
+        else:
+            connections = []
+            for item_val in value:
+                seen_key = '%s:%s:%s' % (related_type, relation_field, item_val)
+                related_obj = self.seen_relations.get('seen_key') \
+                          or self._exists(item_val, filter_field=relation_field,
+                                                    query_field=lower_first(related_type))
+                self.seen_relations[seen_key] = related_obj
+
+                # Create new related object if needed
+                if not related_obj:
+                    related_obj = self._execute_create(dict(**{relation_field: item_val}), related_type)
+
+                connections.append({'id': related_obj['id']})
+            return super().serialize_field(field, name, {'connect': connections})
 
     def start_exporting(self):
         logging.info('start_exporting PrismaGraphQLExporter')
@@ -71,7 +88,6 @@ class PrismaGraphQLExporter(BaseItemExporter):
             query_field, filter_field, filter_value)
         result = json.loads(self.prisma.execute(query))
 
-        logging.info('Executed query: %s with result: %s', query, result)
         return result['data'][query_field]
 
     def _execute_create(self, item, typename=None):
