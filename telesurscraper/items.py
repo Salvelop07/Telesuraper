@@ -19,6 +19,6 @@ class ArticleItem(Item):
     author = Field()
     body = Field()
     tags = Field(array_type=True)
+    images = Field(array_type=True)
     section = Field(related_type='ArticleSection', relation_field='name')
-    images = Field(related_type='Image', relation_field='url', array_type=True)
     service = Field(related_type='Service', relation_field='name')

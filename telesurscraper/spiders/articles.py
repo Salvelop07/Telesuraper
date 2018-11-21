@@ -21,6 +21,8 @@ class ArticlePageItemLoader(ExtructItemLoader):
 
     tags_out = Identity()
 
+    images_out = Identity()
+
     author_in = MapCompose(str.strip)
 
     datePublished_in = MapCompose(parse_date, lambda date: date.isoformat())
@@ -50,7 +52,7 @@ class BaseArticlePageSpider(Spider):
         # l.add_css('author', '.tagBarNews a::attr(title)')
 
         # Images
-        # l.add_css('images', '.tagBarNews a::attr(title)')
+        l.add_jsonld('images', 'NewsArticle', '[].image.url')
 
         # Body
         l.add_css('body', '.txt_newworld')
