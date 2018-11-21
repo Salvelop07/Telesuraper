@@ -11,7 +11,6 @@
 
 import os
 
-
 SERVICE_ID = os.getenv('SERVICE_ID')
 SCHEDULE_URL = os.getenv('SCHEDULE_URL')
 SCHEDULE_TIMEZONE = os.getenv('SCHEDULE_TIMEZONE')
@@ -19,6 +18,12 @@ PRISMA_ENDPOINT = os.getenv('PRISMA_ENDPOINT', 'http://localhost:4466/')
 PRISMA_TOKEN = os.getenv('PRISMA_TOKEN')
 
 BOT_NAME = 'telesurscraper'
+
+# Configure item pipelines
+# See http://scrapy.readthedocs.org/en/latest/topics/item-pipeline.html
+ITEM_PIPELINES = {
+   'telesurscraper.pipelines.PrismaArticlePipeline': 300,
+}
 
 SPIDER_MODULES = ['telesurscraper.spiders']
 NEWSPIDER_MODULE = 'telesurscraper.spiders'
@@ -69,12 +74,6 @@ ROBOTSTXT_OBEY = True
 #EXTENSIONS = {
 #    'telesurscraper.extensions.telnet.TelnetConsole': None,
 #}
-
-# Configure item pipelines
-# See http://scrapy.readthedocs.org/en/latest/topics/item-pipeline.html
-ITEM_PIPELINES = {
-   'telesurscraper.pipelines.ArticlePipeline': 300,
-}
 
 # Enable and configure the AutoThrottle extension (disabled by default)
 # See http://doc.scrapy.org/en/latest/topics/autothrottle.html

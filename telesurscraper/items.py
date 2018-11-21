@@ -1,29 +1,24 @@
-# -*- coding: utf-8 -*-
-
-# Define here the models for your scraped items
-#
-# See documentation in:
-# http://doc.scrapy.org/en/latest/topics/items.html
-
-import scrapy
+from scrapy import Item, Field
 
 
-class BroadcastEventItem(scrapy.Item):
-    service = scrapy.Field()
-    start = scrapy.Field()
-    end = scrapy.Field()
-    timezone = scrapy.Field()
-    weekday = scrapy.Field()
-    serie = scrapy.Field()
+class BroadcastEventItem(Item):
+    service = Field()
+    start = Field()
+    end = Field()
+    timezone = Field()
+    weekday = Field()
+    serie = Field()
 
 
-class ArticleItem(scrapy.Item):
-    service = scrapy.Field()
-    section = scrapy.Field()
-    author = scrapy.Field()
-    url = scrapy.Field()
-    datePublished = scrapy.Field()
-    headline = scrapy.Field()
-    description = scrapy.Field()
-    body = scrapy.Field()
-    thumbnail = scrapy.Field()
+# TODO: Autogenerate from GraphQL schema and/or introspect endpoint
+class ArticleItem(Item):
+    url = Field()
+    datePublished = Field()
+    headline = Field()
+    description = Field()
+    author = Field()
+    body = Field()
+    tags = Field(array_type=True)
+    section = Field(related_type='ArticleSection', relation_field='name')
+    images = Field(related_type='Image', relation_field='url', array_type=True)
+    service = Field(related_type='Service', relation_field='name')
