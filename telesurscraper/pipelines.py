@@ -11,7 +11,7 @@ from telesurscraper.exporters import PrismaGraphQLExporter
 class PrismaArticlePipeline(object):
 
     def process_item(self, item, spider):
-        item['service'] = 'teleSUR'
+        item['service'] = getattr(spider, 'service_name', 'teleSUR')
         exporter = PrismaGraphQLExporter(
             typename='Article',
             filter_field='url',
@@ -20,7 +20,6 @@ class PrismaArticlePipeline(object):
             )
         exporter.start_exporting()
         id = exporter.export_item(item)
-        print('Got ID:', id)
         if id:
             logging.info('Exported object id: %s', id)
             return item

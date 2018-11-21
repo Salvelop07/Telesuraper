@@ -65,8 +65,8 @@ class PrismaGraphQLExporter(BaseItemExporter):
             for item_val in value:
                 seen_key = '%s:%s:%s' % (related_type, relation_field, item_val)
                 related_obj = self.seen_relations.get('seen_key') \
-                          or self._exists(item_val, filter_field=relation_field,
-                                                    query_field=lower_first(related_type))
+                              or self._exists(item_val, filter_field=relation_field,
+                                                        query_field=lower_first(related_type))
                 self.seen_relations[seen_key] = related_obj
 
                 # Create new related object if needed
