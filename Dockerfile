@@ -1,4 +1,4 @@
-FROM scrapinghub/scrapinghub-stack-scrapy:1.3
+FROM scrapinghub/scrapinghub-stack-scrapy:1.5-py3
 
 ENV TERM xterm
 

@@ -14,5 +14,5 @@ build: ## Build the container
 build-nc: ## Build the container without caching
 	docker build --no-cache -t $(APP_NAME)
 
-run: ## Run container on port configured in `config.env`
+run: ## Run container on port configured in `.env`
 	docker run -i -t --rm --env-file=.env --name="$(APP_NAME)" $(APP_NAME) $(RUN_ARGS)
