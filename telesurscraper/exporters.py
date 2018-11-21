@@ -10,7 +10,7 @@ def lower_first(s): return s[0].lower() + s[1:]
 class PrismaGraphQLExporter(BaseItemExporter):
     create_query_pattern = '''
       mutation create($data: %sCreateInput!) {
-        create%s(data: $data) { id }
+        create: create%s(data: $data) { id }
       }
     '''
 
@@ -28,8 +28,9 @@ class PrismaGraphQLExporter(BaseItemExporter):
         if existing_id:
             logging.info('Already exists in datbase, skip: %s', existing_id)
         else:
-            logging.info('Create new object in database')
-            self._execute_create(item)
+            result = self._execute_create(item)
+            logging.info('Created new Article, Mutation result: %s', result)
+
 
     def serialize_field(self, field, name, value):
         related_type = field.get('related_type')
@@ -96,4 +97,5 @@ class PrismaGraphQLExporter(BaseItemExporter):
         createQuery = self.create_query_pattern % (typename or self.typename, typename or self.typename)
         result = self.prisma.execute(createQuery, variables={'data': itemdict })
         logging.info('Executed create query: %s with result: %s and vatiables: %s', createQuery, result, itemdict)
-        return result
+
+        return json.loads(result)['data']['create']
