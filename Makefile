@@ -35,4 +35,4 @@ push: ## push the latest image to DockerHub
 	docker push $(REPOSITORY)
 
 run: ## run an interactive bash session
-	docker run -it --env-file=.env $(REPOSITORY) $(RUN_ARGS)
+	docker run -it --env-file=.env $(REPOSITORY) $(CMD)

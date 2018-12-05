@@ -11,11 +11,21 @@
 
 import os
 
-SERVICE_ID = os.getenv('SERVICE_ID')
-SCHEDULE_URL = os.getenv('SCHEDULE_URL')
-SCHEDULE_TIMEZONE = os.getenv('SCHEDULE_TIMEZONE')
+# Database
 PRISMA_ENDPOINT = os.getenv('PRISMA_ENDPOINT', 'http://localhost:4466/')
 PRISMA_TOKEN = os.getenv('PRISMA_TOKEN')
+
+# Tenant
+SERVICE_ID = os.getenv('SERVICE_ID')
+
+# Broadcast schedules
+SCHEDULE_URL = os.getenv('SCHEDULE_URL')
+SCHEDULE_TIMEZONE = os.getenv('SCHEDULE_TIMEZONE')
+
+# Article listings
+JSPLISTING_PAGE_SIZE = os.getenv('JSPLISTING_PAGE_SIZE')
+JSPLISTING_MAX_PAGES = os.getenv('JSPLISTING_MAX_PAGES')
+JSPLISTING_URL = os.getenv('JSPLISTING_URL')
 
 BOT_NAME = 'telesurscraper'
 

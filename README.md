@@ -4,5 +4,4 @@
     $ make build
 
 ## Running the spiders
-    $ make run scrapy crawl article-jsplisting
-    $ make run scrapy crawl schedules
+    $ make run CMD="scrapy crawl [SPIDER-NAME]"
