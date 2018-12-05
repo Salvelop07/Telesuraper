@@ -10,8 +10,7 @@ ENV SERVICE_ID=
 ENV SCHEDULE_URL=
 ENV SCHEDULE_TIMEZONE='UTC'
 
-RUN apt-get update
-RUN apt-get install -y libtidy-dev
+RUN apt-get update && apt-get install -y libtidy-dev
 
 RUN mkdir -p /app
 WORKDIR /app
