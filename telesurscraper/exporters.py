@@ -8,11 +8,7 @@ def lower_first(s): return s[0].lower() + s[1:]
 
 
 class PrismaGraphQLExporter(BaseItemExporter):
-    create_query_pattern = '''
-      mutation create($data: %sCreateInput!) {
-        create: create%s(data: $data) { id }
-      }
-    '''
+    """Export data to a Prisma database"""
 
     def __init__(self, endpoint, typename=None, token=None, filter_field='id', fields_to_exoprt=[], **kwargs):
         self._configure(kwargs, dont_fail=True)
@@ -23,14 +19,16 @@ class PrismaGraphQLExporter(BaseItemExporter):
         self.seen_relations = {}
         if token: self.prisma.inject_token(token)
 
-    def export_item(self, item):
+    def export_item(self, item, update_existing=False):
         existing_id = self._exists(item.get(self.filter_field), filter_field=self.filter_field)
-        if existing_id:
-            logging.info('Already exists in datbase, skip: %s', existing_id)
-        else:
+        if not existing_id:
             result = self._execute_create(item)
-            logging.info('Created new Article, Mutation result: %s', result)
-
+            logging.info('Created new Article, mutation result: %s', result)
+        elif update_existing:
+            result = self._execute_update(existing_id, item)
+            logging.info('Updated existing Article, mutation result: %s', result)
+        else:
+            logging.debug('Already exists in datbase, skipping: %s', existing_id)
 
     def serialize_field(self, field, name, value):
         related_type = field.get('related_type')
@@ -92,10 +90,27 @@ class PrismaGraphQLExporter(BaseItemExporter):
         return result['data'][query_field]
 
     def _execute_create(self, item, typename=None):
-        itemdict = dict(self._get_serialized_fields(item))
-        # import pdb;pdb.set_trace()
-        createQuery = self.create_query_pattern % (typename or self.typename, typename or self.typename)
-        result = self.prisma.execute(createQuery, variables={'data': itemdict })
-        logging.info('Executed create query: %s with result: %s and vatiables: %s', createQuery, result, itemdict)
+        typename = typename or self.typename
+        query = '''
+          mutation create($data: %sCreateInput!) {
+            create: create%s(data: $data) { id }
+          }
+        ''' % (typename, typename)
+        data = dict(self._get_serialized_fields(item))
+        result = self.prisma.execute(query, variables=dict(data=data))
+        logging.info('Executed create query: %s with result: %s', query, result)
 
         return json.loads(result)['data']['create']
+
+    def _execute_update(self, item, id, typename=None):
+        typename = typename or self.typename
+        query = '''
+          mutation update($where: %sWhereUniqueInput, $data: %sUpdateInput!) {
+            create: update%s(data: $data) { id }
+          }
+        ''' % (typename, typename, typename)
+        data = dict(self._get_serialized_fields(item))
+        result = self.prisma.execute(query, variables=dict(data=data, where=dict(id=id)))
+        logging.info('Executed update query: %s with result: %s', query, result)
+
+        return json.loads(result)['data']['update']

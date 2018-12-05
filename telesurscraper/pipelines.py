@@ -8,7 +8,9 @@ from scrapy.exporters import PythonItemExporter
 
 from telesurscraper.exporters import PrismaGraphQLExporter
 
+
 class PrismaArticlePipeline(object):
+    """Article pipeline"""
 
     def process_item(self, item, spider):
         item['service'] = getattr(spider, 'service_name', 'teleSUR')
@@ -24,4 +26,4 @@ class PrismaArticlePipeline(object):
             logging.info('Exported object id: %s', id)
             return item
         else:
-            logging.info('Item not exported: %s', item)
+            logging.info('Item not exported: %s', item['url'])
