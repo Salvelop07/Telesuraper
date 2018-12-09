@@ -24,9 +24,11 @@ class PrismaGraphQLExporter(BaseItemExporter):
         if not existing_id:
             result = self._execute_create(item)
             logging.info('Created new Article, mutation result: %s', result)
+            return result['id']
         elif update_existing:
             result = self._execute_update(existing_id, item)
             logging.info('Updated existing Article, mutation result: %s', result)
+            return result['id']
         else:
             logging.debug('Already exists in datbase, skipping: %s', existing_id)
 

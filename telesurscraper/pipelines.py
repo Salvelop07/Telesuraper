@@ -12,6 +12,14 @@ from telesurscraper.exporters import PrismaGraphQLExporter
 class PrismaArticlePipeline(object):
     """Article pipeline"""
 
+    def open_spider(self, spider):
+        self.exported = []
+        self.skipped = []
+
+    def close_spider(self, spider):
+        logging.info('Closping spider, total exported: {}, total skipped: {}'.format(
+            len(self.exported), len(self.skipped)))
+
     def process_item(self, item, spider):
         item['service'] = getattr(spider, 'service_name', 'teleSUR')
         exporter = PrismaGraphQLExporter(
@@ -24,6 +32,8 @@ class PrismaArticlePipeline(object):
         id = exporter.export_item(item)
         if id:
             logging.info('Exported object id: %s', id)
+            self.exported.append(id)
             return item
         else:
             logging.info('Item not exported: %s', item['url'])
+            self.skipped.append(id)
