@@ -78,10 +78,10 @@ class PrismaGraphQLExporter(BaseItemExporter):
             return super().serialize_field(field, name, {'connect': connections})
 
     def start_exporting(self):
-        logging.info('start_exporting PrismaGraphQLExporter')
+        logging.debug('start_exporting PrismaGraphQLExporter')
 
     def finish_exporting(self):
-        logging.info('finish PrismaGraphQLExporter')
+        logging.debug('finish PrismaGraphQLExporter')
 
     def _exists(self, filter_value, filter_field='id', query_field=None):
         query_field = query_field or lower_first(self.typename)
@@ -100,7 +100,7 @@ class PrismaGraphQLExporter(BaseItemExporter):
         ''' % (typename, typename)
         data = dict(self._get_serialized_fields(item))
         result = self.prisma.execute(query, variables=dict(data=data))
-        logging.info('Executed create query: %s with result: %s', query, result)
+        logging.debug('Executed create query: %s with result: %s', query, result)
 
         return json.loads(result)['data']['create']
 
