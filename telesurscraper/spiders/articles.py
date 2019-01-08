@@ -29,6 +29,8 @@ class ArticlePageItemLoader(ExtructItemLoader):
 
     datePublished_in = MapCompose(parse_date, lambda date: date.isoformat())
 
+    dateModified_in = MapCompose(parse_date, lambda date: date.isoformat())
+
 
 class BaseArticlePageSpider(Spider):
     """Load data from an Article Page
@@ -44,8 +46,9 @@ class BaseArticlePageSpider(Spider):
         l.add_jsonld('headline', 'NewsArticle', '[].headline')
         l.add_css('headline', '[itemprop=headline]')
 
-        # Date published
+        # Date published/modified
         l.add_jsonld('datePublished', 'NewsArticle', '[].datePublished')
+        l.add_jsonld('dateModified', 'NewsArticle', '[].dateModified')
 
         # Description
         l.add_jsonld('description', 'NewsArticle', '[].description')

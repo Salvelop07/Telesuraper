@@ -14,6 +14,7 @@ class BroadcastEventItem(Item):
 class ArticleItem(Item):
     url = Field()
     datePublished = Field()
+    dateModified = Field()
     headline = Field()
     description = Field()
     author = Field()
