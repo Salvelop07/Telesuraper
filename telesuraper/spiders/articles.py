@@ -9,8 +9,8 @@ from scrapy.spiders import Spider, CrawlSpider, Rule
 from scrapy.linkextractors import LinkExtractor
 from scrapy.loader.processors import TakeFirst, MapCompose, Join, Compose, Identity
 
-from telesurscraper.itemloaders import ExtructItemLoader
-from telesurscraper.items import ArticleItem
+from Telesuraper.itemloaders import ExtructItemLoader
+from Telesuraper.items import ArticleItem
 
 
 class ArticlePageItemLoader(ExtructItemLoader):
@@ -79,9 +79,12 @@ class ArticleJspListingSpider(BaseArticlePageSpider):
     name = 'article-jsplisting'
 
     def start_requests(self):
-        page_size = int(getattr(self, 'page_size', self.settings.get('JSPLISTING_PAGE_SIZE', 20)))
-        max_pages = int(getattr(self, 'max_pages', self.settings.get('JSPLISTING_MAX_PAGES', 10)))
-        start_page = int(getattr(self, 'start_page', self.settings.get('JSPLISTING_START_PAGE', 1)))
+        page_size = int(getattr(self, 'page_size',
+                        self.settings.get('JSPLISTING_PAGE_SIZE', 20)))
+        max_pages = int(getattr(self, 'max_pages',
+                        self.settings.get('JSPLISTING_MAX_PAGES', 10)))
+        start_page = int(getattr(self, 'start_page',
+                         self.settings.get('JSPLISTING_START_PAGE', 1)))
 
         service_name = getattr(self, 'service_name', 'teleSUR HD')
         default_url = 'https://www.telesurtv.net/system/modules/com.tfsla.diario.telesur/elements/TS_NewsCategory_Page.jsp'
@@ -90,17 +93,19 @@ class ArticleJspListingSpider(BaseArticlePageSpider):
         jsp_url = self.settings.get('JSPLISTING_PAGE_URL', default_url)
 
         for i in range(max_pages):
-            url = '{}?pagina={}&size={}'.format(jsp_url, i+start_page, page_size)
+            url = '{}?pagina={}&size={}'.format(
+                jsp_url, i+start_page, page_size)
             yield Request(url, callback=self.parse_article_links)
 
     def parse_article_links(self, response):
         for href in response.css('a::attr(href)'):
             yield response.follow(href, callback=self.parse_article_page)
 
+
 class HomeCrawlerSpider(CrawlSpider, BaseArticlePageSpider):
     """Follows Article links from Home 's listing view endpoint"""
 
-    name='home'
+    name = 'home'
 
     allowed_domains = ['telesurtv.net', 'telesurenglish.net']
     start_urls = ['https://www.telesurtv.net/']

@@ -6,7 +6,7 @@ from graphqlclient import GraphQLClient
 from htmlmin import minify
 from scrapy.exporters import PythonItemExporter
 
-from telesurscraper.exporters import PrismaGraphQLExporter
+from Telesuraper.exporters import PrismaGraphQLExporter
 
 
 class PrismaArticlePipeline(object):
@@ -27,7 +27,7 @@ class PrismaArticlePipeline(object):
             filter_field='url',
             endpoint=spider.settings['PRISMA_ENDPOINT'],
             token=spider.settings['PRISMA_TOKEN']
-            )
+        )
         exporter.start_exporting()
         id = exporter.export_item(item)
         if id:

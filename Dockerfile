@@ -2,7 +2,7 @@ FROM scrapinghub/scrapinghub-stack-scrapy:1.5-py3
 
 ENV TERM xterm
 
-ENV SCRAPY_SETTINGS_MODULE telesurscraper.settings
+ENV SCRAPY_SETTINGS_MODULE Telesuraper.settings
 
 ENV PRISMA_ENDPOINT=
 ENV PRISMA_SECRET=
