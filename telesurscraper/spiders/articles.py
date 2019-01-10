@@ -81,16 +81,16 @@ class ArticleJspListingSpider(BaseArticlePageSpider):
     def start_requests(self):
         page_size = int(getattr(self, 'page_size', self.settings.get('JSPLISTING_PAGE_SIZE', 20)))
         max_pages = int(getattr(self, 'max_pages', self.settings.get('JSPLISTING_MAX_PAGES', 10)))
-        page = getattr(self, 'page', 1)
+        start_page = int(getattr(self, 'start_page', self.settings.get('JSPLISTING_START_PAGE', 1)))
 
-        service_name = getattr(self, 'service_name', 'teleSUR')
+        service_name = getattr(self, 'service_name', 'teleSUR HD')
         default_url = 'https://www.telesurtv.net/system/modules/com.tfsla.diario.telesur/elements/TS_NewsCategory_Page.jsp'
         if service_name == 'teleSUR English':
             default_url = 'https://www.telesurenglish.net/system/modules/com.tfsla.diario.telesur.en/elements/TS_NewsCategory_Page.jsp'
         jsp_url = self.settings.get('JSPLISTING_PAGE_URL', default_url)
 
         for i in range(max_pages):
-            url = '{}?pagina={}&size={}'.format(jsp_url, i+page, page_size)
+            url = '{}?pagina={}&size={}'.format(jsp_url, i+start_page, page_size)
             yield Request(url, callback=self.parse_article_links)
 
     def parse_article_links(self, response):
